@@ -1,0 +1,74 @@
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+let stream;
+
+const MAX_DURATION = 120000; // 2 minutes
+const WEBHOOK_URL = "https://hook.eu2.make.com/h77r4it94hahd0y4z5h1o4n6ioz2vtoe";
+
+const recordBtn = document.getElementById('recordBtn');
+const statusMessage = document.getElementById('statusMessage');
+
+recordBtn.onclick = async () => {
+  if (isRecording) {
+    stopRecording();
+    return;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert("Audio recording not supported.");
+    return;
+  }
+
+  stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  mediaRecorder = new MediaRecorder(stream);
+  audioChunks = [];
+  isRecording = true;
+  recordBtn.innerText = "Recording... Tap to Stop";
+  recordBtn.classList.add("recording");
+  statusMessage.textContent = "";
+
+  mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+  mediaRecorder.onstop = async () => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/mp4' });
+    const file = new File([audioBlob], "voice_note.m4a", { type: 'audio/mp4' });
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        body: formData
+      });
+      console.log("✅ Upload successful. Audio deleted.");
+      statusMessage.textContent = "✅ Recording has been sent!";
+      statusMessage.style.color = "lightgreen";
+    } catch (error) {
+      console.error("❌ Upload failed", error);
+      statusMessage.textContent = "❌ Upload failed. Please try again.";
+      statusMessage.style.color = "red";
+    }
+
+    recordBtn.innerText = "RECORD";
+    recordBtn.classList.remove("recording");
+    isRecording = false;
+  };
+
+  mediaRecorder.start();
+  console.log("🎤 Recording started");
+
+  // Auto-stop after 2 minutes
+  setTimeout(() => {
+    if (isRecording) stopRecording();
+  }, MAX_DURATION);
+};
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+    stream.getTracks().forEach(track => track.stop());
+    recordBtn.classList.remove("recording");
+  }
+}

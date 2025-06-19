@@ -1,0 +1,33 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 100px;
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1f1f1f, #121212); /* Dark minimalist */
+  color: #eaeaea;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+button {
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 20px 40px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:active {
+  background-color: #666;
+}
+
+button.recording {
+  background-color: #e53935; /* Red while recording */
+  color: #fff;
+}
