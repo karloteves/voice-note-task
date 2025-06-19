@@ -3,7 +3,7 @@ let audioChunks = [];
 let isRecording = false;
 let stream;
 
-const MAX_DURATION = 120000; // 2 minutes
+const MAX_DURATION = 120000;
 const WEBHOOK_URL = "https://hook.eu2.make.com/h77r4it94hahd0y4z5h1o4n6ioz2vtoe";
 
 const recordBtn = document.getElementById('recordBtn');
@@ -42,12 +42,11 @@ recordBtn.onclick = async () => {
         method: "POST",
         body: formData
       });
-      console.log("✅ Upload successful. Audio deleted.");
-      statusMessage.textContent = "✅ Recording has been sent!";
+      statusMessage.innerHTML = "✅ Recording has been sent!";
       statusMessage.style.color = "lightgreen";
+      setTimeout(() => statusMessage.textContent = "", 5000);
     } catch (error) {
-      console.error("❌ Upload failed", error);
-      statusMessage.textContent = "❌ Upload failed. Please try again.";
+      statusMessage.textContent = "❌ Upload failed.";
       statusMessage.style.color = "red";
     }
 
@@ -57,9 +56,7 @@ recordBtn.onclick = async () => {
   };
 
   mediaRecorder.start();
-  console.log("🎤 Recording started");
 
-  // Auto-stop after 2 minutes
   setTimeout(() => {
     if (isRecording) stopRecording();
   }, MAX_DURATION);
