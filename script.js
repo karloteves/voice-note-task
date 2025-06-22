@@ -31,21 +31,24 @@ recordBtn.onclick = async () => {
   mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
   mediaRecorder.onstop = async () => {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/mp4' });
-    const file = new File([audioBlob], "voice_note.m4a", { type: 'audio/mp4' });
+    const audioBlob = new Blob(audioChunks, { type: 'audio/m4a' });
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", audioBlob, "voice_note.m4a");
 
     try {
-      await fetch(WEBHOOK_URL, {
+      const response = await fetch(WEBHOOK_URL, {
         method: "POST",
         body: formData
       });
+
+      if (!response.ok) throw new Error("Upload failed");
+
       statusMessage.innerHTML = "✅ Voice note has been sent!";
       statusMessage.style.color = "lightgreen";
       setTimeout(() => statusMessage.textContent = "", 5000);
     } catch (error) {
+      console.error(error);
       statusMessage.textContent = "❌ Upload failed.";
       statusMessage.style.color = "red";
     }
