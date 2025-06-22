@@ -42,7 +42,7 @@ recordBtn.onclick = async () => {
         method: "POST",
         body: formData
       });
-      statusMessage.innerHTML = "✅ Recording has been sent!";
+      statusMessage.innerHTML = "✅ Voice note has been sent!";
       statusMessage.style.color = "lightgreen";
       setTimeout(() => statusMessage.textContent = "", 5000);
     } catch (error) {
