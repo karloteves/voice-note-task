@@ -4,7 +4,7 @@ let isRecording = false;
 let stream;
 
 const MAX_DURATION = 120000;
-const WEBHOOK_URL = "https://hook.eu2.make.com/h77r4it94hahd0y4z5h1o4n6ioz2vtoe";
+const WEBHOOK_URL = "https://hook.eu2.make.com/u9dk9qnqlbnuhmarnxwemh7bcrcn1ey0";
 
 const recordBtn = document.getElementById('recordBtn');
 const statusMessage = document.getElementById('statusMessage');
